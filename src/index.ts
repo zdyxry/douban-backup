@@ -14,9 +14,9 @@ async function main(): Promise<void> {
   const normalizedFeeds = handleRSSFeeds(feeds);
   const completeFeeds = normalizedFeeds.filter(f => f.status === ItemStatus.Complete);
 
-  if (completeFeeds.length) {
-    await handleNotion(completeFeeds);
-  }
+  // if (completeFeeds.length) {
+  //   await handleNotion(completeFeeds);
+  // }
 
   await handleNeodb(normalizedFeeds);
 }
