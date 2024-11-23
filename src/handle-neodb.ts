@@ -40,6 +40,7 @@ export default async function handleNeodb(feeds: FeedItem[]): Promise<void> {
   consola.start('Going to sync to NeoDB...');
   // 同步标记到 neodb
   for (const item of feeds) {
+    consola.info(`Syncing ${item.link} to NeoDB...`);
     await insertToNeodb(item);
   }
   consola.success('NeoDB synced ✨');
@@ -64,6 +65,7 @@ async function insertToNeodb(item: FeedItem): Promise<void> {
   }).json() as NeodbItem;
   // 条目不存在的话会被创建，但此时会返回 {message: 'Fetch in progress'}
   if (neodbItem.uuid) {
+    consola.info(`Item ${neodbItem.title} already exists, updating status...`);
     try {
       const mark = await got(
         `https://neodb.social/api/me/shelf/item/${neodbItem.uuid}`,
@@ -86,6 +88,7 @@ async function insertToNeodb(item: FeedItem): Promise<void> {
     }
   } else {
     // 标记不存在，等待一点时间创建标记再去标记
+    consola.warn(`Item ${item.link} not exists, waiting 1.5s to create it...`);
     await sleep(1500);
     await insertToNeodb(item);
   }
